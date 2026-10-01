@@ -521,7 +521,7 @@
       <div class="settings-card"><h3>Categories</h3><p>Categories for grouping bills.</p><div id="settings-categories"></div><button class="btn btn-ghost" id="add-category" style="margin-top: 1rem; width: 100%;">+ Add category</button></div>
       <div class="settings-card"><h3>Cloud sync</h3><p>Your data syncs to a private Firebase project. Photos go to Firebase Storage.</p><div id="settings-cloud-info" style="font-size: 13px; line-height: 1.6;"></div><div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;"><button class="btn btn-ghost" id="cloud-resync" style="flex: 1;">Force resync</button><button class="btn btn-ghost" id="cloud-retry" style="flex: 1;">Retry connection</button></div></div>
       <div class="settings-card"><h3>Bill template</h3><p>Replace your current bill list with the corrected template (preserves payment history). Use this if you want a clean reset of the bills.</p><button class="btn btn-ghost" id="reset-bills-template" style="width: 100%;">Reload corrected bill template</button></div>
-      <div class="settings-card"><h3>Data archive</h3><p>Export everything as a JSON file, or restore from a previous backup.</p><button class="btn btn-ghost" id="export-data" style="margin-bottom: 0.5rem; width: 100%;">Export all data</button><button class="btn btn-ghost" id="import-data" style="width: 100%;">Import from backup</button><input type="file" id="import-input" accept=".json" style="display: none;"><hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--rule);"><button class="btn btn-danger" id="reset-data" style="width: 100%;">Reset all data</button></div>
+      <div class="settings-card"><h3>Data archive</h3><p>Export everything as a JSON file, or restore from a previous backup.</p><button class="btn btn-ghost" id="export-data" style="margin-bottom: 0.5rem; width: 100%;">Export all data</button><button class="btn btn-ghost" id="import-data" style="width: 100%;">Import from backup</button><input type="file" id="import-input" accept=".json" style="display: none;"><hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--rule);"><button class="btn btn-ghost" id="restore-template" style="width: 100%; margin-bottom: 0.5rem;">Restore bill template</button><p style="font-size: 12px; color: var(--ink-3); line-height: 1.45; margin-bottom: 0.75rem;">Replaces all bills with the saved template and restores the October 2026 paid marks. Transactions, snapshots and the photo are untouched.</p><button class="btn btn-danger" id="reset-data" style="width: 100%;">Reset all data</button></div>
     </div>
   </section>
 
@@ -712,36 +712,35 @@ const SEED_BILLS = [
   { name: 'Crystalline', day: 22, amount: 99.00, account: 'Sapphire', category: 'Subscriptions', type: 'manual', kind: 'bill', notes: '' },
   { name: 'Zoom', day: 24, amount: 14.99, account: 'Sapphire', category: 'Subscriptions', type: 'manual', kind: 'bill', notes: '' },
   { name: 'Missi', day: 30, amount: 60.00, account: 'Sapphire', category: 'Subscriptions', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'Volvo', day: 1, amount: 686.22, account: 'Bluevine', category: 'Auto', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'BlueShield (Audrina)', day: 1, amount: 307.00, account: 'Bluevine', category: 'Insurance', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'BlueShield (Lauren)', day: 1, amount: 396.94, account: 'Bluevine', category: 'Insurance', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'BlueShield (Elias)', day: 1, amount: 824.00, account: 'Bluevine', category: 'Insurance', type: 'manual', kind: 'bill', notes: 'User: Eliasboyd' },
-  { name: 'BlueShield (Aidan)', day: 1, amount: 400.53, account: 'Bluevine', category: 'Insurance', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'Verizon', day: 2, amount: 60.00, account: 'Bluevine', category: 'Utilities', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'QuickBooks', day: 2, amount: 69.00, account: 'Bluevine', category: 'Business', type: 'autopay', kind: 'bill', notes: '' },
-  { name: 'Public Storage', day: 3, amount: 425.00, account: 'Bluevine', category: 'Housing', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'Anthem (Leif)', day: 5, amount: 108.05, account: 'Bluevine', category: 'Insurance', type: 'autopay', kind: 'bill', notes: '' },
-  { name: 'Audrina Medical', day: 5, amount: 310.00, account: 'Bluevine', category: 'Medical', type: 'autopay', kind: 'bill', notes: 'Last payment 5/5/26 - $125' },
-  { name: 'Geico', day: 5, amount: 455.00, account: 'Bluevine', category: 'Insurance', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'SureBridge (Dental)', day: 10, amount: 190.00, account: 'Bluevine', category: 'Insurance', type: 'autopay', kind: 'bill', notes: '' },
-  { name: 'AT&T Wireless', day: 16, amount: 355.70, account: 'Bluevine', category: 'Utilities', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'Porsche - Ally', day: 17, amount: 642.56, account: 'Bluevine', category: 'Auto', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'Capital One (BMW)', day: 20, amount: 596.61, account: 'Bluevine', category: 'Auto', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'Northwestern Mutual', day: 22, amount: 328.06, account: 'Bluevine', category: 'Insurance', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'Greenlight', day: 23, amount: 4.99, account: 'Bluevine', category: 'Subscriptions', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'PG&E', day: 23, amount: 950.00, account: 'Bluevine', category: 'Utilities', type: 'autopay', kind: 'bill', notes: '' },
+  { name: 'Volvo', day: 1, amount: 686.22, account: 'Bluevine', category: 'Auto', type: 'manual', kind: 'bill', notes: '', _p: true },
+  { name: 'BlueShield (Audrina)', day: 1, amount: 306.94, account: 'Bluevine', category: 'Insurance', type: 'manual', kind: 'bill', notes: '', _p: true },
+  { name: 'BlueShield (Lauren)', day: 1, amount: 396.94, account: 'Bluevine', category: 'Insurance', type: 'autopay', kind: 'bill', notes: '' },
+  { name: 'BlueShield (Elias)', day: 1, amount: 824.00, account: 'Bluevine', category: 'Insurance', type: 'manual', kind: 'bill', notes: 'User: eliasboyd', _p: true },
+  { name: 'BlueShield (Aidan)', day: 1, amount: 401.54, account: 'Bluevine', category: 'Insurance', type: 'manual', kind: 'bill', notes: '', _p: true },
+  { name: 'Verizon', day: 1, amount: 150.00, account: 'Bluevine', category: 'Utilities', type: 'autopay', kind: 'bill', notes: '' },
+  { name: 'Public Storage', day: 1, amount: 425.00, account: 'Bluevine', category: 'Housing', type: 'autopay', kind: 'bill', notes: '' },
+  { name: 'Anthem (Leif)', day: 1, amount: 334.00, account: 'Bluevine', category: 'Insurance', type: 'manual', kind: 'bill', notes: '', _p: true },
+  { name: 'Geico', day: 1, amount: 513.00, account: 'Bluevine', category: 'Insurance', type: 'manual', kind: 'bill', notes: '', _p: true },
+  { name: 'SureBridge (Dental)', day: 1, amount: 190.00, account: 'Bluevine', category: 'Insurance', type: 'autopay', kind: 'bill', notes: '' },
+  { name: 'AT&T Wireless', day: 1, amount: 386.21, account: 'Bluevine', category: 'Utilities', type: 'manual', kind: 'bill', notes: 'One time upgrade charges', _p: true },
+  { name: 'Porsche - Ally', day: 1, amount: 642.56, account: 'Bluevine', category: 'Auto', type: 'manual', kind: 'bill', notes: '', _p: true },
+  { name: 'Capital One (BMW)', day: 1, amount: 596.61, account: 'Bluevine', category: 'Auto', type: 'manual', kind: 'bill', notes: '', _p: true },
+  { name: 'Northwestern Mutual', day: 1, amount: 305.64, account: 'Bluevine', category: 'Insurance', type: 'manual', kind: 'bill', notes: '', _p: true },
+  { name: 'Javonna (mid-month)', day: 1, amount: 3010.00, account: 'Bluevine', category: 'Alimony', type: 'manual', kind: 'alimony', notes: '', _p: true },
+  { name: 'Volkswagon Atlas', day: 1, amount: 601.09, account: 'Bluevine', category: 'Other', type: 'manual', kind: 'bill', notes: '', _p: true },
+  { name: 'Mallard Lane - Jerry Halligan', day: 1, amount: 3250.00, account: 'Bluevine', category: 'Housing', type: 'manual', kind: 'bill', notes: '', _p: true },
+  { name: 'PG&E', day: 3, amount: 1426.00, account: 'Bluevine', category: 'Utilities', type: 'manual', kind: 'bill', notes: '' },
+  { name: 'Greenlight', day: 23, amount: 4.99, account: 'Bluevine', category: 'Subscriptions', type: 'autopay', kind: 'bill', notes: '' },
   { name: 'RETR', day: 26, amount: 99.00, account: 'Bluevine', category: 'Subscriptions', type: 'autopay', kind: 'bill', notes: '' },
   { name: 'Primerica', day: 30, amount: 57.86, account: 'Chase Checking', category: 'Insurance', type: 'manual', kind: 'bill', notes: '' },
   { name: 'The Joint', day: 1, amount: 89.00, account: 'Southwest Visa', category: 'Medical', type: 'autopay', kind: 'bill', notes: '' },
   { name: 'YouTube TV', day: 1, amount: 72.99, account: 'Southwest Visa', category: 'Subscriptions', type: 'autopay', kind: 'bill', notes: '' },
   { name: 'DFS Army', day: 27, amount: 35.00, account: 'Southwest Visa', category: 'Subscriptions', type: 'manual', kind: 'bill', notes: '' },
-  { name: 'Javonna (1st)', day: 1, amount: 5801.00, account: 'Chase Checking', category: 'Alimony', type: 'manual', kind: 'alimony', notes: '$25 wire fee' },
-  { name: 'Javonna (mid-month)', day: 15, amount: 3010.00, account: 'Bluevine', category: 'Alimony', type: 'manual', kind: 'alimony', notes: '' },
-  { name: 'SW Visa payment', day: 1, amount: 4500.00, account: 'Chase Checking', category: 'CC Payment', type: 'autopay', kind: 'cc-payment', notes: 'Pays Southwest Visa balance' },
-  { name: 'Sapphire payment', day: 1, amount: 1500.00, account: 'Chase Checking', category: 'CC Payment', type: 'autopay', kind: 'cc-payment', notes: 'Pays Sapphire balance' },
-  { name: 'Discover payment', day: 1, amount: 500.00, account: 'Chase Checking', category: 'CC Payment', type: 'autopay', kind: 'cc-payment', notes: 'Pays Discover balance' },
-  { name: 'Tradition', day: 1, amount: 3995.00, account: 'Chase Checking', category: 'Transfer', type: 'manual', kind: 'transfer', notes: 'Investment transfer' },
-  { name: 'Savings transfer', day: 1, amount: 2000.00, account: 'Bluevine', category: 'Savings', type: 'autopay', kind: 'savings', notes: 'To Chase Savings' }
+  { name: 'Javonna (1st)', day: 1, amount: 5801.00, account: 'Chase Checking', category: 'Alimony', type: 'manual', kind: 'alimony', notes: '$25 wire fee', _p: true },
+  { name: 'SW Visa payment', day: 1, amount: 4500.00, account: 'Chase Checking', category: 'CC Payment', type: 'manual', kind: 'cc-payment', notes: 'Pays Southwest Visa balance', _p: true },
+  { name: 'Sapphire payment', day: 1, amount: 1500.00, account: 'Chase Checking', category: 'CC Payment', type: 'manual', kind: 'cc-payment', notes: 'Pays Sapphire balance', _p: true },
+  { name: 'Discover payment', day: 1, amount: 500.00, account: 'Chase Checking', category: 'CC Payment', type: 'manual', kind: 'cc-payment', notes: 'Pays Discover balance', _p: true },
+  { name: 'Tradition', day: 1, amount: 3995.00, account: 'Chase Checking', category: 'Transfer', type: 'manual', kind: 'transfer', notes: 'Investment transfer' }
 ];
 
 const STORAGE_KEYS = {
@@ -803,14 +802,52 @@ async function load() {
   } catch (e) { console.error('Local load failed:', e); }
 }
 
+
+// Writes the bill template. Also restores the Oct 2026 paid marks captured from
+// the last known-good state. Only ever called on an empty slate, or deliberately
+// by the user from Settings.
+async function applyBillTemplate(silent) {
+  state.bills = SEED_BILLS.map(b => {
+    const { _p, ...rest } = b;
+    return { ...rest, id: uid() };
+  });
+  await safeSet(STORAGE_KEYS.bills, state.bills);
+
+  const RESTORE_MONTH = '2026-10';
+  const paidNames = new Set(SEED_BILLS.filter(b => b._p).map(b => b.name));
+  const monthStatus = {};
+  state.bills.forEach(b => {
+    if (paidNames.has(b.name)) {
+      monthStatus[b.id] = { paid: true, paidDate: RESTORE_MONTH + '-01', amountActual: b.amount };
+    }
+  });
+  state.billStatus = { ...state.billStatus, [RESTORE_MONTH]: monthStatus };
+  await safeSet(STORAGE_KEYS.billStatus, state.billStatus);
+
+  if (!silent) {
+    toast('Bill template restored \u00b7 ' + state.bills.length + ' bills');
+    renderBills();
+    renderDashboard();
+  }
+}
+
+async function confirmRestoreTemplate() {
+  const n = state.bills.length;
+  const msg = n > 0
+    ? 'This REPLACES all ' + n + ' current bills with the saved template and restores the October 2026 paid marks.\n\nYour transactions, cash snapshots and photo are not affected.\n\nContinue?'
+    : 'Load the bill template?';
+  if (!confirm(msg)) return;
+  await applyBillTemplate(false);
+}
+
 async function maybeSeed() {
   const meta = (await safeGet(STORAGE_KEYS.meta)) || {};
   const v = meta.seedVersion || 0;
   let didSeed = false;
 
-  if (v < 1 && state.bills.length === 0) {
-    state.bills = SEED_BILLS.map(b => ({ ...b, id: uid() }));
-    await safeSet(STORAGE_KEYS.bills, state.bills);
+  // Seed bills ONLY when there are genuinely none. Never overwrites existing data.
+  if (state.bills.length === 0) {
+    await applyBillTemplate(true);
     didSeed = true;
   }
   if (v < 2 && state.snapshots.length === 0) {
@@ -822,40 +859,6 @@ async function maybeSeed() {
     }));
     await safeSet(STORAGE_KEYS.snapshots, state.snapshots);
     didSeed = true;
-  }
-  // v3: detect old (buggy) bill seed and auto-correct, preserving paid status by name
-  if (v < 4 && state.bills.length > 0) {
-    const hasAlimony = state.bills.some(b => b.kind === 'alimony');
-    const wronglyOnChase = state.bills.filter(b => b.account === 'Chase Checking' && (b.name.includes('BlueShield') || b.name === 'PG&E' || b.name === 'Volvo' || b.name === 'Geico')).length;
-    const v2Buggy = !hasAlimony && wronglyOnChase >= 2;
-    const v3Buggy = state.bills.some(b => b.kind === 'alimony' && b.day === 1 && b.account === 'Bluevine')
-                 || state.bills.filter(b => b.kind === 'cc-payment' && b.account === 'Bluevine').length >= 2;
-    if (v2Buggy || v3Buggy) {
-      const oldStatusByName = {};
-      Object.entries(state.billStatus).forEach(([mk, statuses]) => {
-        Object.entries(statuses).forEach(([oldId, st]) => {
-          const oldBill = state.bills.find(b => b.id === oldId);
-          if (oldBill && st.paid) {
-            if (!oldStatusByName[oldBill.name]) oldStatusByName[oldBill.name] = {};
-            oldStatusByName[oldBill.name][mk] = st;
-          }
-        });
-      });
-      state.bills = SEED_BILLS.map(b => ({ ...b, id: uid() }));
-      await safeSet(STORAGE_KEYS.bills, state.bills);
-      const newStatus = {};
-      state.bills.forEach(b => {
-        if (oldStatusByName[b.name]) {
-          Object.entries(oldStatusByName[b.name]).forEach(([mk, st]) => {
-            if (!newStatus[mk]) newStatus[mk] = {};
-            newStatus[mk][b.id] = st;
-          });
-        }
-      });
-      state.billStatus = newStatus;
-      await safeSet(STORAGE_KEYS.billStatus, state.billStatus);
-      didSeed = true;
-    }
   }
   if (didSeed || v < SEED_VERSION) {
     await safeSet(STORAGE_KEYS.meta, { ...meta, seedVersion: SEED_VERSION, firstUse: meta.firstUse || new Date().toISOString() });
@@ -2240,6 +2243,7 @@ document.getElementById('import-input').addEventListener('change', e => {
   reader.readAsText(f);
 });
 
+document.getElementById('restore-template').addEventListener('click', confirmRestoreTemplate);
 document.getElementById('reset-data').addEventListener('click', async () => {
   if (!confirm('Wipe ALL data? This cannot be undone.')) return;
   if (!confirm('Are you absolutely sure?')) return;
