@@ -1058,19 +1058,20 @@ function renderBills() {
   const status = state.billStatus[mk] || {};
 
   const total = state.bills.reduce((s, b) => s + (b.amount || 0), 0);
-  let paidAmount = 0, autopayAmount = 0, manualUnpaidAmount = 0, paidCount = 0, autopayCount = 0;
+  let paidAmount = 0, autopayAmount = 0, manualUnpaidAmount = 0, paidCount = 0, autopayCount = 0, unpaidCount = 0;
   state.bills.forEach(b => {
     const st = status[b.id];
     if (st?.paid) { paidAmount += st.amountActual ?? b.amount ?? 0; paidCount++; }
     else if (b.type === 'autopay') { autopayAmount += b.amount || 0; autopayCount++; }
-    else { manualUnpaidAmount += b.amount || 0; }
+    else { manualUnpaidAmount += b.amount || 0; unpaidCount++; }
   });
+  const cashOut = paidAmount + autopayAmount;
+  const cashOutCount = paidCount + autopayCount;
 
   document.getElementById('bills-summary').innerHTML =
     '<div class="metric"><div class="metric-label">Total monthly</div><div class="metric-value"><span class="num">' + fmt(total) + '</span></div><div class="metric-sub">' + state.bills.length + ' items</div></div>' +
-    '<div class="metric"><div class="metric-label">Paid manually</div><div class="metric-value"><span class="num" style="color: var(--sage);">' + fmt(paidAmount) + '</span></div><div class="metric-sub">' + paidCount + ' items</div></div>' +
-    '<div class="metric"><div class="metric-label">On autopay</div><div class="metric-value"><span class="num" style="color: var(--mustard);">' + fmt(autopayAmount) + '</span></div><div class="metric-sub">' + autopayCount + ' items</div></div>' +
-    '<div class="metric"><div class="metric-label">Manual unpaid</div><div class="metric-value"><span class="num" style="color: var(--rust);">' + fmt(manualUnpaidAmount) + '</span></div><div class="metric-sub">action needed</div></div>';
+    '<div class="metric"><div class="metric-label">Cash out so far</div><div class="metric-value"><span class="num" style="color: var(--sage);">' + fmt(cashOut) + '</span></div><div class="metric-sub">' + fmt(paidAmount) + ' manual &middot; ' + fmt(autopayAmount) + ' autopay</div></div>' +
+    '<div class="metric"><div class="metric-label">Still due</div><div class="metric-value"><span class="num" style="color: var(--rust);">' + fmt(manualUnpaidAmount) + '</span></div><div class="metric-sub">' + unpaidCount + ' item' + (unpaidCount === 1 ? '' : 's') + ' need action</div></div>';
 
   renderFilterBar(status);
 
@@ -1139,7 +1140,12 @@ function renderBillsList(status) {
     .map(acct => {
       const bills = groups[acct];
       const acctTotal = bills.reduce((s, b) => s + (b.amount || 0), 0);
-      const acctPaid = bills.reduce((s, b) => { const st = status[b.id]; return s + (st?.paid ? (st.amountActual ?? b.amount ?? 0) : 0); }, 0);
+      const acctPaid = bills.reduce((s, b) => {
+        const st = status[b.id];
+        if (st?.paid) return s + (st.amountActual ?? b.amount ?? 0);
+        if (b.type === 'autopay') return s + (b.amount || 0);
+        return s;
+      }, 0);
       return '<div class="bill-group">' +
         '<div class="bill-group-header">' +
         '<div class="bill-group-name">' + escapeHtml(acct) + '</div>' +
